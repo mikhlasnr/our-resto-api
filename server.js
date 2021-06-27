@@ -1,8 +1,8 @@
-// express for routing api
+// !express for routing api
 const express = require("express");
 const app = express();
 
-// Socket.io Handling for transfer data realtime
+// !Socket.io Handling for transfer data realtime
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, { cors: { origin: "*" } });
 
@@ -18,13 +18,13 @@ io.on("connection", socket => {
   });
 });
 
-// server listen
+// !server listen
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
   console.log("Server running...");
 });
 
-// Setting db
+// !Setting db
 const knex = require("knex");
 
 const db = knex({
@@ -37,18 +37,26 @@ const db = knex({
   },
 });
 
-// import middleware
+// !import middleware
 const cors = require("cors");
 
-// ! Use Middleware
+// !Use Middleware
 app.use(express.json());
 app.use(cors());
 
-// import controlers handler
+// -------- START create route api --------
+// !import controlers handler
 const signin = require("./controllers/signin");
+const user = require("./controllers/user");
 
-// create route api
 app.get("/", (req, res) => {
   res.send("Server running...");
 });
+
+// route api signin
 app.post("/signin", signin.handleSignin(db));
+
+// route api user
+app.get("/users", user.getUsers(db));
+app.get("/role", user.getUsers(db));
+// --------END create route api --------
