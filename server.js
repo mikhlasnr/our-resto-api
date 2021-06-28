@@ -39,10 +39,12 @@ const db = knex({
 
 // !import middleware
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
 // !Use Middleware
 app.use(express.json());
 app.use(cors());
+app.use(fileUpload());
 
 // -------- START create route api --------
 // !import controlers handler
@@ -58,5 +60,8 @@ app.post("/signin", signin.handleSignin(db));
 
 // route api user
 app.get("/users", user.getUsers(db));
-app.get("/role", user.getUsers(db));
+app.get("/roles", user.getRoles(db));
+
+app.post("/user/add", user.addUser(db));
+app.post("/user/add/image/:IdUser", user.handlingAddUserImage(db));
 // --------END create route api --------
