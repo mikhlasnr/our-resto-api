@@ -1,15 +1,24 @@
-const { response } = require("express");
-
 const getUsers = db => (req, res) => {
-  db.select("*")
+  db.select(
+    "user.IdUser",
+    "user.Email",
+    "user.Nama",
+    "user.NoTelp",
+    "user.IdRole",
+    "user.StatusOnline",
+    "user.Alamat",
+    "user.Foto",
+    "role.NamaRole"
+  )
     .from("user")
     .join("role", { "user.IdRole": "role.IdRole" })
     .then(data => {
-      return res.json(data);
+      return res.status(200).json(data);
     })
-    .catch(err => res.status(400).json("wrong credentials"));
+    .catch(error => res.status(400).json(error));
 };
 
+// START API ADD USER
 const addUser = db => (req, res) => {
   db.transaction(trx => {
     return trx
@@ -25,38 +34,44 @@ const addUser = db => (req, res) => {
       console.log("new user saved.");
     })
     .catch(error => {
-      // If we get here, that means that neither the 'Old Books' catalogues insert,
-      // nor any of the books inserts will have taken place.
-      // console.log(error);
-      return res.status(400).json(error);
+      if (error.errno === 1062) return res.status(400).json("Email Sudah Ada!");
+      return res.status(400).json("error");
     });
 };
 
 const handlingAddUserImage = db => (req, res) => {
-  const { data } = req.files.image;
+  const { ImageUrl } = req.body;
   const { IdUser } = req.params;
+  console.log(ImageUrl);
   db("user")
     .where("IdUser", "=", IdUser)
     .update({
-      Foto: data,
+      Foto: ImageUrl,
     })
-    .then(response => {
-      console.log(response);
-      return res.status(200).json(response);
+    .then(data => {
+      console.log(data);
+      return res.status(200).json(data);
     })
-    .catch(error => {
-      console.log(error);
-      return res.status(400).json(error);
-    });
+    .catch(error => res.status(400).json(error));
 };
+
+const handlingEmailExist = db => (req, res) => {
+  const { Email } = req.body;
+  db("user")
+    .count("Email as emailExist")
+    .where({ Email })
+    .then(data => {
+      return res.status(200).json(data[0]);
+    })
+    .catch(error => res.status(400).json(error));
+};
+// END API ADD USER
 
 const getRoles = db => (req, res) => {
   db.select("*")
     .from("role")
-    .then(data => {
-      return res.status(200).json(data);
-    })
-    .catch(err => res.status(400).json("Error Can't GET DATA ROLES"));
+    .then(data => res.status(200).json(data))
+    .catch(error => res.status(400).json(error));
 };
 
 module.exports = {
@@ -64,4 +79,5 @@ module.exports = {
   getRoles,
   addUser,
   handlingAddUserImage,
+  handlingEmailExist,
 };

@@ -11,11 +11,6 @@ io.on("connection", socket => {
   socket.on("disconnect", socket => {
     console.log(`User is disconnected ${socket.id}`);
   });
-
-  socket.on("message", data => {
-    console.log(data);
-    io.emit("message", data);
-  });
 });
 
 // !server listen
@@ -64,4 +59,6 @@ app.get("/roles", user.getRoles(db));
 
 app.post("/user/add", user.addUser(db));
 app.post("/user/add/image/:IdUser", user.handlingAddUserImage(db));
+app.post("/user/validation-email", user.handlingEmailExist(db));
+
 // --------END create route api --------
