@@ -2,6 +2,9 @@
 const express = require("express");
 const app = express();
 
+// ! handling has Password
+const bcrypt = require("bcryptjs");
+
 // !Socket.io Handling for transfer data realtime
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, { cors: { origin: "*" } });
@@ -38,7 +41,7 @@ const fileUpload = require("express-fileupload");
 
 // !Use Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(fileUpload());
 
 // -------- START create route api --------
@@ -51,13 +54,14 @@ app.get("/", (req, res) => {
 });
 
 // route api signin
-app.post("/signin", signin.handleSignin(db));
+app.post("/signin", signin.handleSignin(db, bcrypt));
 
 // route api user
 app.get("/users", user.getUsers(db));
+app.get("/users/:IdUser", user.getUserById(db));
 app.get("/roles", user.getRoles(db));
 
-app.post("/user/add", user.addUser(db));
+app.post("/user/add", user.addUser(db, bcrypt));
 app.post("/user/add/image/:IdUser", user.handlingAddUserImage(db));
 app.post("/user/validation-email", user.handlingEmailExist(db));
 

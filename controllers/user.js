@@ -18,11 +18,36 @@ const getUsers = db => (req, res) => {
     .catch(error => res.status(400).json(error));
 };
 
+const getUserById = db => (req, res) => {
+  const { IdUser } = req.params;
+
+  db.select(
+    "user.IdUser",
+    "user.Email",
+    "user.Nama",
+    "user.NoTelp",
+    "user.IdRole",
+    "user.StatusOnline",
+    "user.Alamat",
+    "user.Foto",
+    "role.NamaRole"
+  )
+    .from("user")
+    .join("role", { "user.IdRole": "role.IdRole" })
+    .where({ IdUser })
+    .then(data => {
+      return res.status(200).json(data[0]);
+    })
+    .catch(error => res.status(400).json(error));
+};
+
 // START API ADD USER
-const addUser = db => (req, res) => {
+const addUser = (db, bcrypt) => (req, res) => {
+  const { Email, Nama, Password, NoTelp, IdRole, Alamat } = req.body;
+  const hash = bcrypt.hashSync(Password, 8);
   db.transaction(trx => {
     return trx
-      .insert(req.body)
+      .insert({ Email, Nama, NoTelp, IdRole, Alamat, Password: hash })
       .into("user")
       .then(user => {
         return res.status(200).json(user);
@@ -42,7 +67,6 @@ const addUser = db => (req, res) => {
 const handlingAddUserImage = db => (req, res) => {
   const { ImageUrl } = req.body;
   const { IdUser } = req.params;
-  console.log(ImageUrl);
   db("user")
     .where("IdUser", "=", IdUser)
     .update({
@@ -58,10 +82,10 @@ const handlingAddUserImage = db => (req, res) => {
 const handlingEmailExist = db => (req, res) => {
   const { Email } = req.body;
   db("user")
-    .count("Email as emailExist")
+    .count("Email as CountEmail")
     .where({ Email })
     .then(data => {
-      return res.status(200).json(data[0]);
+      return res.status(200).json(!!data[0].CountEmail);
     })
     .catch(error => res.status(400).json(error));
 };
@@ -80,4 +104,5 @@ module.exports = {
   addUser,
   handlingAddUserImage,
   handlingEmailExist,
+  getUserById,
 };
