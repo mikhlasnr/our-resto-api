@@ -65,4 +65,6 @@ app.post("/user/add", user.addUser(db, bcrypt));
 app.post("/user/add/image/:IdUser", user.handlingAddUserImage(db));
 app.post("/user/validation-email", user.handlingEmailExist(db));
 app.post("/user/update/:IdUser", user.updateUser(db, bcrypt));
+app.post("/user/delete/:IdUser", user.deleteUser(db));
+
 // --------END create route api --------

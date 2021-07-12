@@ -12,9 +12,7 @@ const getUsers = db => (req, res) => {
   )
     .from("user")
     .join("role", { "user.IdRole": "role.IdRole" })
-    .then(data => {
-      return res.status(200).json(data);
-    })
+    .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
 
@@ -24,10 +22,7 @@ const getUserById = db => (req, res) => {
   db.select("*")
     .from("user")
     .where({ IdUser })
-    .then(data => {
-      console.log(data[0]);
-      return res.status(200).json(data[0]);
-    })
+    .then(data => res.status(200).json(data[0]))
     .catch(error => res.status(400).json(error));
 };
 
@@ -39,9 +34,7 @@ const addUser = (db, bcrypt) => (req, res) => {
     return trx
       .insert({ Email, Nama, NoTelp, IdRole, Alamat, Password: hash })
       .into("user")
-      .then(user => {
-        return res.status(200).json(user);
-      })
+      .then(user => res.status(200).json(user))
       .then(trx.commit)
       .catch(trx.rollback);
   })
@@ -62,10 +55,7 @@ const handlingAddUserImage = db => (req, res) => {
     .update({
       Foto: ImageUrl,
     })
-    .then(data => {
-      console.log(data);
-      return res.status(200).json(data);
-    })
+    .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
 
@@ -74,13 +64,11 @@ const handlingEmailExist = db => (req, res) => {
   db("user")
     .count("Email as CountEmail")
     .where({ Email })
-    .then(data => {
-      return res.status(200).json(!!data[0].CountEmail);
-    })
+    .then(data => res.status(200).json(!!data[0].CountEmail))
     .catch(error => res.status(400).json(error));
 };
 // END API ADD USER
-// START API UPDATE USER
+// API UPDATE USER
 const updateUser = (db, bcrypt) => (req, res) => {
   let inputData = {};
   const { IdUser } = req.params;
@@ -95,13 +83,19 @@ const updateUser = (db, bcrypt) => (req, res) => {
   db("user")
     .where("IdUser", "=", IdUser)
     .update(inputData)
-    .then(data => {
-      console.log(data);
-      return res.status(200).json(data);
-    })
+    .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
-// END API UPDATE USER
+
+// API DELETE USER
+const deleteUser = db => (req, res) => {
+  const { IdUser } = req.params;
+  db("user")
+    .where({ IdUser })
+    .del()
+    .then(res => res.status(200).json(res))
+    .catch(error => res.status(200).json(error));
+};
 
 // Get Data Roles
 const getRoles = (db, bcrypt) => (req, res) => {
@@ -119,4 +113,5 @@ module.exports = {
   handlingEmailExist,
   getUserById,
   updateUser,
+  deleteUser,
 };
