@@ -58,11 +58,11 @@ app.post("/signin", signin.handleSignin(db, bcrypt));
 
 // route api user
 app.get("/users", user.getUsers(db));
-app.get("/users/:IdUser", user.getUserById(db));
+app.get("/user/:IdUser", user.getUserById(db));
 app.get("/roles", user.getRoles(db));
 
 app.post("/user/add", user.addUser(db, bcrypt));
 app.post("/user/add/image/:IdUser", user.handlingAddUserImage(db));
 app.post("/user/validation-email", user.handlingEmailExist(db));
-
+app.post("/user/update/:IdUser", user.updateUser(db, bcrypt));
 // --------END create route api --------

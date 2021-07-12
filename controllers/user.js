@@ -21,21 +21,11 @@ const getUsers = db => (req, res) => {
 const getUserById = db => (req, res) => {
   const { IdUser } = req.params;
 
-  db.select(
-    "user.IdUser",
-    "user.Email",
-    "user.Nama",
-    "user.NoTelp",
-    "user.IdRole",
-    "user.StatusOnline",
-    "user.Alamat",
-    "user.Foto",
-    "role.NamaRole"
-  )
+  db.select("*")
     .from("user")
-    .join("role", { "user.IdRole": "role.IdRole" })
     .where({ IdUser })
     .then(data => {
+      console.log(data[0]);
       return res.status(200).json(data[0]);
     })
     .catch(error => res.status(400).json(error));
@@ -90,8 +80,31 @@ const handlingEmailExist = db => (req, res) => {
     .catch(error => res.status(400).json(error));
 };
 // END API ADD USER
+// START API UPDATE USER
+const updateUser = (db, bcrypt) => (req, res) => {
+  let inputData = {};
+  const { IdUser } = req.params;
 
-const getRoles = db => (req, res) => {
+  if (req.body.Password) {
+    const { Password: Pass, ...otherValues } = req.body;
+    const Password = bcrypt.hashSync(Pass, 8);
+    inputData = { Password, ...otherValues };
+  } else inputData = req.body;
+  console.log(inputData);
+
+  db("user")
+    .where("IdUser", "=", IdUser)
+    .update(inputData)
+    .then(data => {
+      console.log(data);
+      return res.status(200).json(data);
+    })
+    .catch(error => res.status(400).json(error));
+};
+// END API UPDATE USER
+
+// Get Data Roles
+const getRoles = (db, bcrypt) => (req, res) => {
   db.select("*")
     .from("role")
     .then(data => res.status(200).json(data))
@@ -105,4 +118,5 @@ module.exports = {
   handlingAddUserImage,
   handlingEmailExist,
   getUserById,
+  updateUser,
 };
