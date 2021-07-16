@@ -48,23 +48,33 @@ app.use(fileUpload());
 // !import controlers handler
 const signin = require("./controllers/signin");
 const user = require("./controllers/user");
+const menu = require("./controllers/menu");
 
 app.get("/", (req, res) => {
   res.send("Server running...");
 });
 
-// route api signin
+// ROUTE API SIGNIN
 app.post("/signin", signin.handleSignin(db, bcrypt));
 
-// route api user
+// ROUTE API USER
 app.get("/users", user.getUsers(db));
 app.get("/user/:IdUser", user.getUserById(db));
-app.get("/roles", user.getRoles(db));
+app.get("/users/roles", user.getRoles(db));
 
 app.post("/user/add", user.addUser(db, bcrypt));
-app.post("/user/add/image/:IdUser", user.handlingAddUserImage(db));
 app.post("/user/validation-email", user.handlingEmailExist(db));
-app.post("/user/update/:IdUser", user.updateUser(db, bcrypt));
-app.post("/user/delete/:IdUser", user.deleteUser(db));
+app.post(
+  "/user/validation-email/on-update",
+  user.handlingEmailExistOnUpdate(db)
+);
+
+app.put("/user/add/image/:IdUser", user.handlingAddUserImage(db));
+app.put("/user/update/:IdUser", user.updateUser(db, bcrypt));
+
+app.delete("/user/delete/:IdUser", user.deleteUser(db));
+
+// ROUTE API MENU
+app.get("/menus/kategori", menu.getKategoriMenu(db));
 
 // --------END create route api --------

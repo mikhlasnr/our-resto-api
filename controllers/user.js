@@ -64,11 +64,15 @@ const handlingEmailExist = db => (req, res) => {
   db("user")
     .count("Email as CountEmail")
     .where({ Email })
-    .then(data => res.status(200).json(!!data[0].CountEmail))
-    .catch(error => res.status(400).json(error));
+    .then(response => {
+      console.log(!!response[0].CountEmail);
+      res.status(200).json({ exist: !!response[0].CountEmail });
+    })
+    .catch(error => res.status(400).json(response));
 };
+
 // END API ADD USER
-// API UPDATE USER
+// START API UPDATE USER
 const updateUser = (db, bcrypt) => (req, res) => {
   let inputData = {};
   const { IdUser } = req.params;
@@ -86,7 +90,21 @@ const updateUser = (db, bcrypt) => (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
-
+const handlingEmailExistOnUpdate = db => (req, res) => {
+  const { NewEmail, OldEmail } = req.body;
+  if (NewEmail === OldEmail) res.status(200).json({ exist: false });
+  else {
+    db("user")
+      .count("Email as CountEmail")
+      .where({ Email: NewEmail }, "Email", "<>", OldEmail)
+      .then(response => {
+        console.log(!!response[0].CountEmail);
+        res.status(200).json({ exist: !!response[0].CountEmail });
+      })
+      .catch(error => res.status(400).json({ message: error }));
+  }
+};
+// END API UPDATE USER
 // API DELETE USER
 const deleteUser = db => (req, res) => {
   const { IdUser } = req.params;
@@ -98,10 +116,13 @@ const deleteUser = db => (req, res) => {
 };
 
 // Get Data Roles
-const getRoles = (db, bcrypt) => (req, res) => {
+const getRoles = db => (req, res) => {
   db.select("*")
     .from("role")
-    .then(data => res.status(200).json(data))
+    .then(data => {
+      console.log(data);
+      return res.status(200).json(data);
+    })
     .catch(error => res.status(400).json(error));
 };
 
@@ -114,4 +135,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
+  handlingEmailExistOnUpdate,
 };
