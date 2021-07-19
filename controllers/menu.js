@@ -35,10 +35,19 @@ const handlingAddKategoriMenuImage = db => (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
+const deleteKategoriMenu = db => (req, res) => {
+  const { IdKategori } = req.params;
+  db("kategori")
+    .where({ IdKategori })
+    .del()
+    .then(res => res.status(200).json(res))
+    .catch(error => res.status(200).json(error));
+};
 // *===END HANDLING KATEGORI MENU===
 
 module.exports = {
   getKategoriMenu,
   addKategoriMenu,
   handlingAddKategoriMenuImage,
+  deleteKategoriMenu,
 };

@@ -72,15 +72,17 @@ app.put("/user/add/image/:IdUser", user.handlingAddUserImage(db));
 app.put("/user/update/:IdUser", user.updateUser(db, bcrypt));
 app.delete("/user/delete/:IdUser", user.deleteUser(db));
 
+// !ROUTE API ROLE
 app.get("/user-role", user.getRoles(db));
-// !ROUTE API MENU
-// Handling get kategori
+
+// !ROUTE API KATEGORI MENU
 app.get("/kategori-menu", menu.getKategoriMenu(db));
 app.post("/kategori-menu/add", menu.addKategoriMenu(db));
 app.put(
   "/kategori-menu/add/images/:IdKategori",
   menu.handlingAddKategoriMenuImage(db)
 );
+app.delete("/kategori-menu/delete/:IdKategori", menu.deleteKategoriMenu(db));
 
 // Handling get menu
 // app.get("/menu");
