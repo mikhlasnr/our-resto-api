@@ -54,13 +54,12 @@ app.get("/", (req, res) => {
   res.send("Server running...");
 });
 
-// ROUTE API SIGNIN
+// !ROUTE API SIGNIN
 app.post("/signin", signin.handleSignin(db, bcrypt));
 
-// ROUTE API USER
+// !ROUTE API USER
 app.get("/users", user.getUsers(db));
 app.get("/user/:IdUser", user.getUserById(db));
-app.get("/users/roles", user.getRoles(db));
 
 app.post("/user/add", user.addUser(db, bcrypt));
 app.post("/user/validation-email", user.handlingEmailExist(db));
@@ -71,10 +70,21 @@ app.post(
 
 app.put("/user/add/image/:IdUser", user.handlingAddUserImage(db));
 app.put("/user/update/:IdUser", user.updateUser(db, bcrypt));
-
 app.delete("/user/delete/:IdUser", user.deleteUser(db));
 
-// ROUTE API MENU
-app.get("/menus/kategori", menu.getKategoriMenu(db));
+app.get("/user-role", user.getRoles(db));
+// !ROUTE API MENU
+// Handling get kategori
+app.get("/kategori-menu", menu.getKategoriMenu(db));
+app.post("/kategori-menu/add", menu.addKategoriMenu(db));
+app.put(
+  "/kategori-menu/add/images/:IdKategori",
+  menu.handlingAddKategoriMenuImage(db)
+);
+
+// Handling get menu
+// app.get("/menu");
+// app.get("/menu/get-by-id-menu/:idMenu");
+// app.get("/menu/get-by-id-kategori/:IdKategori");
 
 // --------END create route api --------
