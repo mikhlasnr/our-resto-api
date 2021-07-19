@@ -48,7 +48,9 @@ app.use(fileUpload());
 // !import controlers handler
 const signin = require("./controllers/signin");
 const user = require("./controllers/user");
+const userRole = require("./controllers/userRole");
 const menu = require("./controllers/menu");
+const kategoriMenu = require("./controllers/kategoriMenu");
 
 app.get("/", (req, res) => {
   res.send("Server running...");
@@ -73,20 +75,23 @@ app.put("/user/update/:IdUser", user.updateUser(db, bcrypt));
 app.delete("/user/delete/:IdUser", user.deleteUser(db));
 
 // !ROUTE API ROLE
-app.get("/user-role", user.getRoles(db));
+app.get("/user-role", userRole.getRoles(db));
 
 // !ROUTE API KATEGORI MENU
-app.get("/kategori-menu", menu.getKategoriMenu(db));
-app.post("/kategori-menu/add", menu.addKategoriMenu(db));
+app.get("/kategori-menu", kategoriMenu.getKategoriMenu(db));
+app.get("/kategori-menu/:IdKategori", kategoriMenu.getKategoriMenuById(db));
+
+app.post("/kategori-menu/add", kategoriMenu.addKategoriMenu(db));
 app.put(
   "/kategori-menu/add/images/:IdKategori",
-  menu.handlingAddKategoriMenuImage(db)
+  kategoriMenu.handlingAddKategoriMenuImage(db)
 );
-app.delete("/kategori-menu/delete/:IdKategori", menu.deleteKategoriMenu(db));
+app.delete(
+  "/kategori-menu/delete/:IdKategori",
+  kategoriMenu.deleteKategoriMenu(db)
+);
 
-// Handling get menu
-// app.get("/menu");
-// app.get("/menu/get-by-id-menu/:idMenu");
-// app.get("/menu/get-by-id-kategori/:IdKategori");
-
+// !ROUTE API MENU
+app.get("/menus", menu.getMenu(db));
+app.get("/menus/getbykategori/:IdKategori", menu.getMenuByKategori(db));
 // --------END create route api --------
