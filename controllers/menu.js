@@ -5,9 +5,17 @@ const getMenu = db => (req, res) => {
     .whereNull("IdKategori")
     .then(data => {
       return db
-        .select("*")
+        .select(
+          "menu.IdMenu",
+          "menu.NamaMenu",
+          "menu.Harga",
+          "menu.Stok",
+          "kategori.IdKategori",
+          "kategori.NamaKategori",
+          "menu.Foto"
+        )
         .from("menu")
-        .join("kategori", { "kategori.IdKategori": "menu.IdKategori" })
+        .join("kategori", { "menu.IdKategori": "kategori.IdKategori" })
         .then(response => {
           return res.status(200).json([...response, ...data]);
         })
