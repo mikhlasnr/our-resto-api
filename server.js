@@ -94,4 +94,7 @@ app.delete(
 // !ROUTE API MENU
 app.get("/menus", menu.getMenu(db));
 app.get("/menus/getbykategori/:IdKategori", menu.getMenuByKategori(db));
+
+app.post("/menu/add", menu.addMenu(db));
+app.put("/menu/add/images/:IdMenu", menu.handlingAddMenuImage(db));
 // --------END create route api --------
