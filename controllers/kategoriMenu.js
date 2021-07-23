@@ -47,7 +47,7 @@ const deleteKategoriMenu = db => (req, res) => {
   db("kategori")
     .where({ IdKategori })
     .del()
-    .then(res => res.status(200).json(res))
+    .then(response => res.status(200).json(response))
     .catch(error => res.status(200).json(error));
 };
 // *===END HANDLING KATEGORI MENU===

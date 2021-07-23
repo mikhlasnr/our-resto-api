@@ -93,8 +93,13 @@ app.delete(
 
 // !ROUTE API MENU
 app.get("/menus", menu.getMenu(db));
-app.get("/menus/getbykategori/:IdKategori", menu.getMenuByKategori(db));
+app.get("/menu/get-by-id-menu/:IdMenu", menu.getMenuById(db));
+app.get("/menus/get-by-id-kategori/:IdKategori", menu.getMenuByKategori(db));
 
 app.post("/menu/add", menu.addMenu(db));
 app.put("/menu/add/images/:IdMenu", menu.handlingAddMenuImage(db));
+
+app.put("/menu/update/:IdMenu", menu.deleteMenu(db));
+app.delete("/menu/delete/:IdMenu", menu.deleteMenu(db));
+
 // --------END create route api --------

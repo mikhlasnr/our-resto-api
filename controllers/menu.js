@@ -27,7 +27,14 @@ const getMenu = db => (req, res) => {
     })
     .catch(error => res.status(400).json(error));
 };
-
+const getMenuById = db => (req, res) => {
+  const { IdMenu } = req.params;
+  db.select("*")
+    .from("menu")
+    .where("IdMenu", "=", IdMenu)
+    .then(data => res.status(200).json(data[0]))
+    .catch(error => res.status(400).json({ error }));
+};
 const getMenuByKategori = db => (req, res) => {
   const { IdKategori } = req.params;
   db.select("*")
@@ -53,7 +60,6 @@ const addMenu = db => (req, res) => {
     })
     .catch(error => res.status(400).json(error));
 };
-
 const handlingAddMenuImage = db => (req, res) => {
   const { ImageUrl } = req.body;
   const { IdMenu } = req.params;
@@ -65,11 +71,29 @@ const handlingAddMenuImage = db => (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
+
+const deleteMenu = db => (req, res) => {
+  const { IdMenu } = req.params;
+  console.log(IdMenu);
+  db("menu")
+    .where({ IdMenu })
+    .del()
+    .then(response => {
+      console.log(response);
+      res.status(200).json(response);
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(400).json(error);
+    });
+};
 // *===END HANDLING MENU===
 
 module.exports = {
   getMenu,
+  getMenuById,
   getMenuByKategori,
   addMenu,
   handlingAddMenuImage,
+  deleteMenu,
 };
