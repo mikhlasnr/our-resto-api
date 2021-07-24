@@ -38,9 +38,18 @@ const getMenuById = db => (req, res) => {
 };
 const getMenuByKategori = db => (req, res) => {
   const { IdKategori } = req.params;
-  db.select("*")
+  db.select(
+    "menu.IdMenu",
+    "menu.NamaMenu",
+    "menu.Harga",
+    "menu.Stok",
+    "kategori.IdKategori",
+    "kategori.NamaKategori",
+    "menu.Foto"
+  )
     .from("menu")
-    .where("IdKategori", "=", IdKategori)
+    .join("kategori", { "menu.IdKategori": "kategori.IdKategori" })
+    .where("menu.IdKategori", "=", IdKategori)
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
