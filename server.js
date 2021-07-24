@@ -99,7 +99,7 @@ app.get("/menus/get-by-id-kategori/:IdKategori", menu.getMenuByKategori(db));
 app.post("/menu/add", menu.addMenu(db));
 app.put("/menu/add/images/:IdMenu", menu.handlingAddMenuImage(db));
 
-app.put("/menu/update/:IdMenu", menu.deleteMenu(db));
+app.put("/menu/update/:IdMenu", menu.updateMenu(db));
 app.delete("/menu/delete/:IdMenu", menu.deleteMenu(db));
 
 // --------END create route api --------

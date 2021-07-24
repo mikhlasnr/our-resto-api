@@ -1,7 +1,8 @@
-const { response } = require("express");
 const util = require("./controllers.util");
 
 // *===START HANDLING MENU===
+
+// Handling Get Menu
 const getMenu = db => (req, res) => {
   db.select("*")
     .from("menu")
@@ -43,7 +44,7 @@ const getMenuByKategori = db => (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
-
+// Handling Add Menu
 const addMenu = db => (req, res) => {
   const { NamaMenu, ...otherData } = req.body;
   const namaCapitalize = util.handlingCapitalize(NamaMenu);
@@ -71,7 +72,19 @@ const handlingAddMenuImage = db => (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
-
+// Handling Update Menu
+const updateMenu = db => (req, res) => {
+  const { IdMenu } = req.params;
+  // req.body = {NamaKetegori,Harga,Stok,IdKategori}
+  const { NamaMenu, ...otherData } = req.body;
+  const namaCapitalize = util.handlingCapitalize(NamaMenu);
+  db("menu")
+    .where("IdMenu", "=", IdMenu)
+    .update({ NamaMenu: namaCapitalize, ...otherData })
+    .then(data => res.status(200).json(data))
+    .catch(error => res.status(400).json(error));
+};
+// Handling Delete Menu
 const deleteMenu = db => (req, res) => {
   const { IdMenu } = req.params;
   console.log(IdMenu);
@@ -96,4 +109,5 @@ module.exports = {
   addMenu,
   handlingAddMenuImage,
   deleteMenu,
+  updateMenu,
 };
