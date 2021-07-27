@@ -61,7 +61,9 @@ const addMenu = db => (req, res) => {
     return trx
       .insert({ NamaMenu: namaCapitalize, ...otherData })
       .into("menu")
-      .then(response => res.status(200).json(response))
+      .then(response => {
+        res.status(200).json(response);
+      })
       .then(trx.commit)
       .catch(trx.rollback);
   })
@@ -81,6 +83,7 @@ const handlingAddMenuImage = db => (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
+
 // Handling Update Menu
 const updateMenu = db => (req, res) => {
   const { IdMenu } = req.params;
@@ -93,10 +96,41 @@ const updateMenu = db => (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
+
+const isStokMenuExist = db => (req, res) => {
+  const { IdMenu } = req.body;
+  db("menu")
+    .select()
+    .where({ Email })
+    .then(response => {
+      console.log(!!response[0].CountEmail);
+      res.status(200).json({ exist: !!response[0].CountEmail });
+    })
+    .catch(error => res.status(400).json(response));
+};
+
+const decrementStokMenu = db => (req, res) => {
+  const { IdMenu } = req.params;
+  const { Quantity } = req.body;
+  db("menu")
+    .where("IdMenu", "=", IdMenu)
+    .decrement("Stok", Quantity)
+    .then(data => res.status(200).json(data))
+    .catch(error => res.status(400).json(error));
+};
+
+const incrementStokMenu = db => (req, res) => {
+  const { IdMenu } = req.params;
+  const { Quantity } = req.body;
+  db("menu")
+    .where("IdMenu", "=", IdMenu)
+    .increment("Stok", Quantity)
+    .then(data => res.status(200).json(data))
+    .catch(error => res.status(400).json(error));
+};
 // Handling Delete Menu
 const deleteMenu = db => (req, res) => {
   const { IdMenu } = req.params;
-  console.log(IdMenu);
   db("menu")
     .where({ IdMenu })
     .del()
@@ -119,4 +153,6 @@ module.exports = {
   handlingAddMenuImage,
   deleteMenu,
   updateMenu,
+  decrementStokMenu,
+  incrementStokMenu,
 };

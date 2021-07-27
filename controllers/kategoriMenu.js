@@ -20,7 +20,9 @@ const addKategoriMenu = db => (req, res) => {
     return trx
       .insert({ NamaKategori })
       .into("kategori")
-      .then(kategori => res.status(200).json(kategori))
+      .then(response => {
+        return res.status(200).json(response);
+      })
       .then(trx.commit)
       .catch(trx.rollback);
   })

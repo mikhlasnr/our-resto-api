@@ -1,3 +1,9 @@
+// !axios initial setting
+const onDevlop = true;
+const API_URL = onDevlop ? "http://localhost:4000" : "";
+const axios = require("axios").create({
+  baseUrl: API_URL,
+});
 // !express for routing api
 const express = require("express");
 const app = express();
@@ -51,7 +57,7 @@ const user = require("./controllers/user");
 const userRole = require("./controllers/userRole");
 const menu = require("./controllers/menu");
 const kategoriMenu = require("./controllers/kategoriMenu");
-
+const pesanan = require("./controllers/pesanan");
 app.get("/", (req, res) => {
   res.send("Server running...");
 });
@@ -100,6 +106,9 @@ app.post("/menu/add", menu.addMenu(db));
 app.put("/menu/add/images/:IdMenu", menu.handlingAddMenuImage(db));
 
 app.put("/menu/update/:IdMenu", menu.updateMenu(db));
+app.put("/menu/decrement-stok/:IdMenu", menu.decrementStokMenu(db));
 app.delete("/menu/delete/:IdMenu", menu.deleteMenu(db));
 
+// !ROUTE API PESANAN
 // --------END create route api --------
+app.post("/pesanan/add", pesanan.addPesanan(db, axios));
