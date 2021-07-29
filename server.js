@@ -58,6 +58,7 @@ const userRole = require("./controllers/userRole");
 const menu = require("./controllers/menu");
 const kategoriMenu = require("./controllers/kategoriMenu");
 const pesanan = require("./controllers/pesanan");
+const detailPesanan = require("./controllers/detailPesanan");
 app.get("/", (req, res) => {
   res.send("Server running...");
 });
@@ -106,9 +107,18 @@ app.post("/menu/add", menu.addMenu(db));
 app.put("/menu/add/images/:IdMenu", menu.handlingAddMenuImage(db));
 
 app.put("/menu/update/:IdMenu", menu.updateMenu(db));
+app.put("/menu/increment-stok/:IdMenu", menu.incrementStokMenu(db));
 app.put("/menu/decrement-stok/:IdMenu", menu.decrementStokMenu(db));
+
 app.delete("/menu/delete/:IdMenu", menu.deleteMenu(db));
 
 // !ROUTE API PESANAN
+app.get("/pesanan", pesanan.getPesanan(db));
+
+app.post("/pesanan/add", pesanan.addPesanan(db));
+app.delete("/pesanan/delete/:IdPesanan", pesanan.deletePesanan(db));
+
+// !ROUTE API DETAIL PESANAN
+app.get("/detail-pesanan/:IdPesanan", detailPesanan.getDetailPesanan(db));
+
 // --------END create route api --------
-app.post("/pesanan/add", pesanan.addPesanan(db, axios));

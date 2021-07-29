@@ -96,19 +96,7 @@ const updateMenu = db => (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
-
-const isStokMenuExist = db => (req, res) => {
-  const { IdMenu } = req.body;
-  db("menu")
-    .select()
-    .where({ Email })
-    .then(response => {
-      console.log(!!response[0].CountEmail);
-      res.status(200).json({ exist: !!response[0].CountEmail });
-    })
-    .catch(error => res.status(400).json(response));
-};
-
+// START Handling WHen Create Or Delete Pesanan
 const decrementStokMenu = db => (req, res) => {
   const { IdMenu } = req.params;
   const { Quantity } = req.body;
@@ -128,6 +116,7 @@ const incrementStokMenu = db => (req, res) => {
     .then(data => res.status(200).json(data))
     .catch(error => res.status(400).json(error));
 };
+// END Handling WHen Create Or Delete Pesanan
 // Handling Delete Menu
 const deleteMenu = db => (req, res) => {
   const { IdMenu } = req.params;
