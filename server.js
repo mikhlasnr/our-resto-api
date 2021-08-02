@@ -116,6 +116,17 @@ app.delete("/menu/delete/:IdMenu", menu.deleteMenu(db));
 app.get("/pesanan", pesanan.getPesanan(db));
 
 app.post("/pesanan/add", pesanan.addPesanan(db));
+// START Handling update Status
+app.put(
+  "/pesanan/update-status-antar/:IdPesanan",
+  pesanan.updateStatusAntar(db)
+);
+app.put(
+  "/pesanan/update-status-masak/:IdPesanan",
+  pesanan.updateStatusMasak(db)
+);
+// END Handling update Status
+
 app.delete("/pesanan/delete/:IdPesanan", pesanan.deletePesanan(db));
 
 // !ROUTE API DETAIL PESANAN

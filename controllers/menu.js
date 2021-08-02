@@ -28,6 +28,7 @@ const getMenu = db => (req, res) => {
     })
     .catch(error => res.status(400).json(error));
 };
+
 const getMenuById = db => (req, res) => {
   const { IdMenu } = req.params;
   db.select("*")
