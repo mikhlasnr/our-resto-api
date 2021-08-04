@@ -1,14 +1,16 @@
 // Handling GET Pesanan
 const getPesanan = db => (req, res) => {
-  if (req.query.getPesananByCurrentDay) {
-    const objDate = new Date();
-    const year = objDate.getFullYear();
-    const month = objDate.getMonth();
-    const day = objDate.getDay();
-    const currentDate = `${year}-${month}-${day}`;
+  console.log(req.query.getCurrentDay);
+  if (req.query.getCurrentDay === "true") {
+    let today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const dd = String(today.getDate()).padStart(2, "0");
+    today = `${yyyy}-${mm}-${dd} 00:00:00`;
+    console.log(today);
     db.select("*")
       .from("pesanan")
-      .where("TanggalDibuat", ">=", currentDate)
+      .where("TanggalDibuat", ">=", today)
       .then(data => {
         return res.status(200).json(data);
       })
@@ -79,15 +81,6 @@ const updateStatusAntar = db => (req, res) => {
     .catch(error => res.status(400).json(error));
 };
 
-// Handling update status bayar
-const updateStatusBayar = db => (req, res) => {
-  const { IdPesanan } = req.params;
-  db("pesanan")
-    .where("IdPesanan", "=", IdPesanan)
-    .update({ StatusBayar: "lunas" })
-    .then(data => res.status(200).json(data))
-    .catch(error => res.status(400).json(error));
-};
 // Handling Delete Pesanan
 const deletePesanan = db => (req, res) => {
   const { IdPesanan } = req.params;
@@ -110,6 +103,5 @@ module.exports = {
   addPesanan,
   updateStatusMasak,
   updateStatusAntar,
-  updateStatusBayar,
   deletePesanan,
 };

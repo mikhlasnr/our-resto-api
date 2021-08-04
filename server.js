@@ -126,10 +126,7 @@ app.put(
   "/pesanan/update-status-masak/:IdPesanan",
   pesanan.updateStatusMasak(db)
 );
-app.put(
-  "/pesanan/update-status-bayar/:IdPesanan",
-  pesanan.updateStatusBayar(db)
-);
+
 // END Handling update Status
 
 app.delete("/pesanan/delete/:IdPesanan", pesanan.deletePesanan(db));
