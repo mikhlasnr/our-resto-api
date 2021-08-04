@@ -59,6 +59,7 @@ const menu = require("./controllers/menu");
 const kategoriMenu = require("./controllers/kategoriMenu");
 const pesanan = require("./controllers/pesanan");
 const detailPesanan = require("./controllers/detailPesanan");
+const pembayaran = require("./controllers/pembayaran");
 app.get("/", (req, res) => {
   res.send("Server running...");
 });
@@ -125,11 +126,16 @@ app.put(
   "/pesanan/update-status-masak/:IdPesanan",
   pesanan.updateStatusMasak(db)
 );
+app.put(
+  "/pesanan/update-status-bayar/:IdPesanan",
+  pesanan.updateStatusBayar(db)
+);
 // END Handling update Status
 
 app.delete("/pesanan/delete/:IdPesanan", pesanan.deletePesanan(db));
 
 // !ROUTE API DETAIL PESANAN
 app.get("/detail-pesanan/:IdPesanan", detailPesanan.getDetailPesanan(db));
-
+// !ROUTE API Pemabayaran
+app.post("/pembayaran/add", pembayaran.addPembayaran(db, axios));
 // --------END create route api --------

@@ -1,12 +1,22 @@
 // Handling GET Pesanan
 const getPesanan = db => (req, res) => {
-  if (req.query.withdetail) {
+  if (req.query.getPesananByCurrentDay) {
+    const objDate = new Date();
+    const year = objDate.getFullYear();
+    const month = objDate.getMonth();
+    const day = objDate.getDay();
+    const currentDate = `${year}-${month}-${day}`;
     db.select("*")
       .from("pesanan")
-      .where(req.query)
-      .then(data => res.status(200).json(data))
-      .catch(error => res.status(400).json(error));
+      .where("TanggalDibuat", ">=", currentDate)
+      .then(data => {
+        return res.status(200).json(data);
+      })
+      .catch(error => {
+        return res.status(400).json(error);
+      });
   } else {
+    console.log("masuk pak eko");
     db.select("*")
       .from("pesanan")
       .where(req.query)
