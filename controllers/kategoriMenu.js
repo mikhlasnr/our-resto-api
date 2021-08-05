@@ -26,9 +26,7 @@ const addKategoriMenu = db => (req, res) => {
       .then(trx.commit)
       .catch(trx.rollback);
   })
-    .then(inserts => {
-      console.log("new kategori saved.");
-    })
+    .then(inserts => {})
     .catch(error => {
       return res.status(400).json(error);
     });

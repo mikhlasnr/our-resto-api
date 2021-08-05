@@ -68,9 +68,7 @@ const addMenu = db => (req, res) => {
       .then(trx.commit)
       .catch(trx.rollback);
   })
-    .then(inserts => {
-      console.log("new menu saved.");
-    })
+    .then(inserts => {})
     .catch(error => res.status(400).json(error));
 };
 const handlingAddMenuImage = db => (req, res) => {
@@ -125,12 +123,10 @@ const deleteMenu = db => (req, res) => {
     .where({ IdMenu })
     .del()
     .then(response => {
-      console.log(response);
-      res.status(200).json(response);
+      return res.status(200).json(response);
     })
     .catch(error => {
-      console.log(error);
-      res.status(400).json(error);
+      return res.status(400).json(error);
     });
 };
 // *===END HANDLING MENU===

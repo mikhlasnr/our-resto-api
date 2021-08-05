@@ -40,9 +40,7 @@ const addUser = (db, bcrypt) => (req, res) => {
       .then(trx.commit)
       .catch(trx.rollback);
   })
-    .then(inserts => {
-      console.log("new user saved.");
-    })
+    .then(inserts => {})
     .catch(error => {
       if (error.errno === 1062) return res.status(400).json("Email Sudah Ada!");
       return res.status(400).json("error");
@@ -67,7 +65,6 @@ const handlingEmailExist = db => (req, res) => {
     .count("Email as CountEmail")
     .where({ Email })
     .then(response => {
-      console.log(!!response[0].CountEmail);
       res.status(200).json({ exist: !!response[0].CountEmail });
     })
     .catch(error => res.status(400).json(response));
@@ -84,7 +81,6 @@ const updateUser = (db, bcrypt) => (req, res) => {
     const Password = bcrypt.hashSync(Pass, 8);
     inputData = { Password, ...otherValues };
   } else inputData = req.body;
-  console.log(inputData);
 
   db("user")
     .where("IdUser", "=", IdUser)
@@ -100,7 +96,6 @@ const handlingEmailExistOnUpdate = db => (req, res) => {
       .count("Email as CountEmail")
       .where({ Email: NewEmail }, "Email", "<>", OldEmail)
       .then(response => {
-        console.log(!!response[0].CountEmail);
         res.status(200).json({ exist: !!response[0].CountEmail });
       })
       .catch(error => res.status(400).json({ message: error }));

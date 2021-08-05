@@ -60,6 +60,7 @@ const kategoriMenu = require("./controllers/kategoriMenu");
 const pesanan = require("./controllers/pesanan");
 const detailPesanan = require("./controllers/detailPesanan");
 const pembayaran = require("./controllers/pembayaran");
+const report = require("./controllers/report");
 app.get("/", (req, res) => {
   res.send("Server running...");
 });
@@ -134,5 +135,12 @@ app.delete("/pesanan/delete/:IdPesanan", pesanan.deletePesanan(db));
 // !ROUTE API DETAIL PESANAN
 app.get("/detail-pesanan/:IdPesanan", detailPesanan.getDetailPesanan(db));
 // !ROUTE API Pemabayaran
-app.post("/pembayaran/add", pembayaran.addPembayaran(db, axios));
+app.get(
+  "/pembayaran/get-by-id-pesanan/:IdPesanan",
+  pembayaran.getPembayaran(db)
+);
+
+app.post("/pembayaran/add", pembayaran.addPembayaran(db));
+// !ROUTE API For Report
+app.get("/report/get-by-year", report.getIncomeByYear(db));
 // --------END create route api --------

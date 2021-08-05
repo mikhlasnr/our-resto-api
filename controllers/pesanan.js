@@ -1,13 +1,11 @@
 // Handling GET Pesanan
 const getPesanan = db => (req, res) => {
-  console.log(req.query.getCurrentDay);
   if (req.query.getCurrentDay === "true") {
     let today = new Date();
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
     const dd = String(today.getDate()).padStart(2, "0");
     today = `${yyyy}-${mm}-${dd} 00:00:00`;
-    console.log(today);
     db.select("*")
       .from("pesanan")
       .where("TanggalDibuat", ">=", today)
@@ -18,7 +16,6 @@ const getPesanan = db => (req, res) => {
         return res.status(400).json(error);
       });
   } else {
-    console.log("masuk pak eko");
     db.select("*")
       .from("pesanan")
       .where(req.query)
@@ -37,6 +34,9 @@ const addPesanan = db => (req, res) => {
       return { idpesanan, ...item };
     });
   };
+  let today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1);
 
   db.transaction(trx => {
     trx
@@ -47,6 +47,8 @@ const addPesanan = db => (req, res) => {
         TotalQuantity,
         TotalHarga,
         TanggalDibuat: new Date(),
+        TahunDibuat: yyyy,
+        BulanDibuat: mm,
       })
       .into("pesanan")
       .then(IdPesanan => {
@@ -84,16 +86,13 @@ const updateStatusAntar = db => (req, res) => {
 // Handling Delete Pesanan
 const deletePesanan = db => (req, res) => {
   const { IdPesanan } = req.params;
-  console.log(IdPesanan);
   db("pesanan")
     .where({ IdPesanan })
     .del()
     .then(response => {
-      console.log(response);
       return res.status(200).json(response);
     })
     .catch(error => {
-      console.log(error);
       return res.status(400).json(error);
     });
 };
