@@ -1,21 +1,58 @@
 const getUsers = db => (req, res) => {
-  db.select(
-    "user.IdUser",
-    "user.Email",
-    "user.Nama",
-    "user.NoTelp",
-    "user.IdRole",
-    "user.StatusOnline",
-    "user.Alamat",
-    "user.Foto",
-    "role.NamaRole"
-  )
-    .from("user")
-    .join("role", { "user.IdRole": "role.IdRole" })
-    .whereNot("NamaRole", "Admin")
-    .orderBy("NamaRole")
-    .then(data => res.status(200).json(data))
-    .catch(error => res.status(400).json(error));
+  if (req.query.adminHidden === "true") {
+    db.select(
+      "user.IdUser",
+      "user.Email",
+      "user.Nama",
+      "user.NoTelp",
+      "user.IdRole",
+      "user.StatusOnline",
+      "user.Alamat",
+      "user.Foto",
+      "role.NamaRole"
+    )
+      .from("user")
+      .join("role", { "user.IdRole": "role.IdRole" })
+      .whereNot("NamaRole", "Admin")
+      .orderBy("NamaRole")
+      .then(data => res.status(200).json(data))
+      .catch(error => res.status(400).json(error));
+  } else if (req.query.currentUserHidden) {
+    db.select(
+      "user.IdUser",
+      "user.Email",
+      "user.Nama",
+      "user.NoTelp",
+      "user.IdRole",
+      "user.StatusOnline",
+      "user.Alamat",
+      "user.Foto",
+      "role.NamaRole"
+    )
+      .from("user")
+      .join("role", { "user.IdRole": "role.IdRole" })
+      .whereNot("IdUser", req.query.currentUserHidden)
+      .orderBy("NamaRole")
+      .then(data => res.status(200).json(data))
+      .catch(error => res.status(400).json(error));
+  } else {
+    db.select(
+      "user.IdUser",
+      "user.Email",
+      "user.Nama",
+      "user.NoTelp",
+      "user.IdRole",
+      "user.StatusOnline",
+      "user.Alamat",
+      "user.Foto",
+      "role.NamaRole"
+    )
+      .from("user")
+      .join("role", { "user.IdRole": "role.IdRole" })
+      .orderBy("NamaRole")
+      .then(data => res.status(200).json(data))
+      .catch(error => res.status(400).json(error));
+  }
 };
 
 const getUserById = db => (req, res) => {
